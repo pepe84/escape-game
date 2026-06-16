@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "title": "Escape Game Demo",
+  "description": "Joc de prova",
+  "durationMinutes": 60,
+  "pages": [
+    {
+      "id": "intro",
+      "type": "info",
+      "title": "Benvinguts",
+      "content": "Comença l'aventura"
+    },
+    {
+      "id": "q1",
+      "type": "question",
+      "title": "Primera prova",
+      "content": "Quin és el nom de la ciutat?",
+      "question": {
+        "type": "text",
+        "answer": "vilanova",
+        "penaltySeconds": 60,
+        "errorHelp": "És una ciutat costanera",
+        "config": {
+          "length": 8
+        }
+      },
+      "hints": [
+        "És al Garraf",
+        "Comença per V",
+        "Acaba per -nova"
+      ],
+      "solution": "Vilanova"
+    },
+    {
+      "id": "q2",
+      "type": "question",
+      "title": "Codi secret",
+      "content": "Introdueix el codi correcte",
+      "question": {
+        "type": "numericCode",
+        "answer": "5732",
+        "penaltySeconds": 60,
+        "config": {
+          "digits": 4
+        }
+      },
+      "hints": [
+        "Primer dígit = 5",
+        "Segon dígit = 7"
+      ],
+      "solution": "5732"
+    },
+    {
+      "id": "q3",
+      "type": "question",
+      "title": "Escull una opció",
+      "content": "Quin color és correcte?",
+      "question": {
+        "type": "select",
+        "answer": "Verd",
+        "config": {
+          "options": [
+            "Blau",
+            "Vermell",
+            "Verd",
+            "Groc"
+          ]
+        }
+      }
+    },
+    {
+      "id": "q4",
+      "type": "question",
+      "title": "Data històrica",
+      "content": "Indica la data correcta",
+      "question": {
+        "type": "date",
+        "answer": "12-06-1881",
+        "errorHelp": "Format DD-MM-AAAA"
+      },
+      "solution": "12-06-1881"
+    },
+    {
+      "id": "final",
+      "type": "info",
+      "title": "Final",
+      "content": "Heu completat el joc"
+    }
+  ]
+}
