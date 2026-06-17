@@ -19,7 +19,6 @@ export function Header() {
       <div className="h-full px-6 flex items-center justify-between">
 
         <div className="flex items-center gap-3">
-
           <div
             className="
               w-10
@@ -35,11 +34,9 @@ export function Header() {
           >
             <Brain size={24} />
           </div>
-
           <span className="font-semibold">
             Escape Game Engine
           </span>
-
         </div>
 
         <div
