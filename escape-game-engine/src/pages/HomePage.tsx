@@ -46,12 +46,12 @@ export function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
 
-      <div className="w-full max-w-xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/10 p-8 space-y-6">
+    <div className="py-12 px-4">
+      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 p-8 space-y-6">
 
         {/* Header */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2"> 
           <h1 className="text-3xl font-bold tracking-tight">
             Escape Game Engine
           </h1>
