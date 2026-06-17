@@ -1,55 +1,50 @@
 import { Brain } from 'lucide-react';
+import { useCountdown } from "../../hooks/useCountdown";
+import { useGame } from "../../context/GameContext";
+import { useNavigate } from "react-router-dom";
+import { StorageService } from "../../services/StorageService";
 
 export function Header() {
+  const { formatted } = useCountdown();
+  const { state, reset } = useGame();
+  const navigate = useNavigate();
+
+  const abandonGame = () => {
+    const ok = confirm("Segur que vols finalitzar la partida?");
+    if (!ok) return;
+
+    reset();
+    StorageService.clear();
+    navigate("/");
+  };
+
   return (
-    <header
-      className="
-        fixed
-        top-0
-        left-0
-        right-0
-        h-16
-        bg-slate-900
-        text-white
-        border-b
-        border-slate-700
-        z-50
-      "
-    >
+    <header className="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white border-b border-slate-700 z-50">
       <div className="h-full px-6 flex items-center justify-between">
 
         <div className="flex items-center gap-3">
-          <div
-            className="
-              w-10
-              h-10
-              rounded-lg
-              bg-emerald-500
-              flex
-              items-center
-              justify-center
-              font-bold
-              text-slate-900
-            "
-          >
+          <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-slate-900">
             <Brain size={24} />
           </div>
-          <span className="font-semibold">
-            Escape Game Engine
-          </span>
+          <span className="font-semibold">Escape Game Engine</span>
         </div>
 
-        <div
-          className="
-            font-mono
-            text-xl
-            font-bold
-            tracking-wider
-          "
-        >
-          00h:00m:00s
-        </div>
+        <div className="flex items-center gap-4">
+          
+          <div className="font-mono text-xl font-bold tracking-wider">
+            {formatted}
+          </div>
 
+          {state && (
+            <button
+              onClick={abandonGame}
+              className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded"
+            >
+              Finalitzar
+            </button>
+          )}
+
+        </div>
       </div>
     </header>
   );

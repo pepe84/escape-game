@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import { StorageService } from "../services/StorageService";
@@ -7,6 +7,10 @@ export function StartGamePage() {
   const [teamName, setTeamName] = useState("");
   const { game, setState } = useGame();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!game) navigate("/");
+  }, [game]);
 
   if (!game) return null;
 
