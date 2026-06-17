@@ -1,10 +1,13 @@
 import { AppLayout } from "./components/layout/AppLayout";
-import { HomePage } from "./pages/HomePage";
+import { AppRouter } from "./router/AppRouter";
+import { GameProvider } from "./context/GameContext";
 
 export default function App() {
   return (
-    <AppLayout>
-      <HomePage />
-    </AppLayout>
+    <GameProvider>
+      <AppLayout>
+        <AppRouter />
+      </AppLayout>
+    </GameProvider>
   );
 }

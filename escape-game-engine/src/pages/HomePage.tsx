@@ -1,12 +1,17 @@
 import { useState } from "react";
-import exampleGame from "../data/example-game.json";
 import { GameLoaderService } from "../services/GameLoaderService";
+import { useNavigate } from "react-router-dom";
+import { useGame } from "../context/GameContext";
+import exampleGame from "../data/example-game.json";
 
 export function HomePage() {
   
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [demoValid, setDemoValid] = useState<boolean>(false);
+
+  const { setGame } = useGame();
+  const navigate = useNavigate();
 
   const handleGame = (result) => {
     if (!result.success) {
@@ -20,8 +25,11 @@ export function HomePage() {
     }
 
     console.log("Game OK", result.data);
+    
+    setGame(result.data);
+    setError(null);  
 
-    setError(null);
+    navigate("/game");
   }
 
   const handleLoadExample = () => {
