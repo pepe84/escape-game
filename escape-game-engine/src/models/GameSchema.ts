@@ -25,36 +25,21 @@ const QuestionSchema = z.object({
   type: z.enum([
     "text",
     "select",
-    "numericCode",
+    "code",
     "date",
   ]),
-  answer: z.string(),
+  formatHelp: z.string().optional(),
   penaltySeconds: z.number().optional(),
-  errorHelp: z.string().optional(),
   config: z.any().optional(),
-});
-
-const InfoPageSchema = z.object({
-  id: z.string(),
-  type: z.literal("info"),
-  title: z.string(),
-  content: PageContentSchema.optional(),
-});
-
-const QuestionPageSchema = z.object({
-  id: z.string(),
-  type: z.literal("question"),
-  title: z.string(),
-  content: PageContentSchema.optional(),
-  question: QuestionSchema,
   hints: z.array(z.string()).optional(),
-  solution: z.string().optional(),
+  answer: z.string(),
 });
 
-const GamePageSchema = z.union([
-  InfoPageSchema,
-  QuestionPageSchema,
-]);
+const GamePageSchema = z.object({
+  title: z.string(),
+  content: PageContentSchema.optional(),
+  question: QuestionSchema.optional(),
+});
 
 export const EscapeGameSchema = z.object({
   version: z.string(),

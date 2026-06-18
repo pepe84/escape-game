@@ -32,7 +32,7 @@ export function StartGamePage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8">
+    <>
       <h1 className="text-2xl font-bold mb-6">{game.title}</h1>
 
       <input
@@ -49,6 +49,6 @@ export function StartGamePage() {
       >
         Començar partida
       </button>
-    </div>
+    </>
   );
 }

@@ -46,7 +46,7 @@ export function HomePage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-white rounded-2xl shadow border space-y-6">
+    <>
       <h1 className="text-3xl font-bold">Escape Game Engine</h1>
 
       <button onClick={loadExample} className="w-full bg-emerald-500 text-white py-3 rounded-xl">
@@ -60,6 +60,6 @@ export function HomePage() {
       </button>
 
       {error && <pre className="text-red-500 whitespace-pre-wrap">{error}</pre>}
-    </div>
+    </>
   );
 }

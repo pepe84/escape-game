@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
-import { GameEngineService } from "../services/GameEngineService";
 import { useGamePersistence } from "../hooks/useGamePersistence";
+import { GameEngineService } from "../services/GameEngineService";
+import { QuestionEngineService } from "../services/QuestionEngineService";
+import { isEmpty } from "../utils/isEmpty";
 
 export function GamePage() {
 
@@ -33,11 +35,13 @@ export function GamePage() {
 
   const validateQuestion = () => {
 
-    const ok =
-      answer.trim().toLowerCase() ===
-      page.question.answer.trim().toLowerCase();
+    if (isEmpty(answer)) {
+      setError("Resposta obligatòria");
+      return;
+    }
+    const result = QuestionEngineService.evaluate(page.question, answer);
 
-    if (!ok) {
+    if (!result.correct) {
       commit(GameEngineService.applyPenalty(state, 60));
       setError("Incorrecte (+1 minut)");
       return;
@@ -45,60 +49,65 @@ export function GamePage() {
 
     commit(GameEngineService.registerSuccess(state));
     setError(null);
+    setAnswer("");
     nextPage();
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-6">
+    <>
 
-      <div className="bg-white border rounded-xl p-6 space-y-4">
+      <h2 className="text-xl font-bold">
+        {page.title}
+      </h2>
 
-        <h2 className="text-xl font-bold">
-          {page.title}
-        </h2>
-
-        <div className="text-gray-700 whitespace-pre-wrap">
-          {page.content}
-        </div>
-        
-        {page.type === "question" && (
-          <div className="space-y-4">
-
-            <input
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="w-full border rounded-lg px-4 py-3"
-              placeholder="Resposta..."
-            />
-
-            <button
-              onClick={validateQuestion}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-            >
-              Resoldre
-            </button>
-
-            {error && (
-              <div className="text-red-500 text-sm">
-                {error}
-              </div>
-            )}
-
-          </div>
-        )}
-
-        {page.type === "info" && (
-          <div className="flex justify-end">
-            <button
-              onClick={nextPage}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
-            >
-              Següent
-            </button>
-          </div>
-        )}
-
+      <div className="text-gray-700 whitespace-pre-wrap">
+        {page.content}
       </div>
-    </div>
+
+      {page.question && (
+        <div className="space-y-4">
+
+          <input
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            className="w-full border rounded-lg px-4 py-3"
+            placeholder="Resposta..."
+            required
+          />
+
+          {page.question?.formatHelp && (
+            <div className="text-gray-500 text-sm">
+              {page.question?.formatHelp}
+            </div>
+          )}
+
+          <button
+            onClick={validateQuestion}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Resoldre
+          </button>
+
+          {error && (
+            <div className="text-red-500 text-sm">
+              {error}
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {!page.question && (
+        <div className="flex justify-end">
+          <button
+            onClick={nextPage}
+            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+          >
+            Següent
+          </button>
+        </div>
+      )}
+
+    </>
   );
 }
