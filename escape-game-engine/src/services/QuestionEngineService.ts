@@ -1,6 +1,23 @@
+import type { CodeQuestionConfig, Question } from "../models/Question";
+
 export class QuestionEngineService {
 
-  static evaluate(question: any, userAnswer: any) {
+  static getInitialAnswer(question: Question) {
+
+    switch (question.type) {
+
+      case "code":
+        return Array((question.config as CodeQuestionConfig)?.digits ?? 4).fill("");
+
+      case "text":
+      case "select":
+      case "date":
+      default:
+        return "";
+    }
+  }
+
+  static evaluate(question: Question, userAnswer: any) {
 
     switch (question.type) {
 
@@ -17,35 +34,66 @@ export class QuestionEngineService {
         return this.evalDate(question, userAnswer);
 
       default:
-        return { correct: false, error: "Unknown type" };
+        return {
+          correct: false,
+          error: "Unknown question type"
+        };
     }
   }
 
-  static evalText(question: any, answer: string) {
-    const ok =
-      answer.trim().toLowerCase() ===
-      question.answer.trim().toLowerCase();
+  private static evalText(question: Question, answer: string) {
 
-    return { correct: ok };
+    return {
+      correct:
+        answer.trim().toLowerCase() ===
+        question.answer.trim().toLowerCase()
+    };
   }
 
-  static evalSelect(question: any, answer: string) {
+  private static evalSelect(question: Question, answer: string) {
+
     return {
       correct: answer === question.answer
     };
   }
 
-  static evalCode(question: any, answer: string[]) {
-    const ok =
-      JSON.stringify(answer) ===
-      JSON.stringify(question.answer);
+  private static evalCode(question: Question, answer: string[]) {
 
-    return { correct: ok };
+    const code =
+      answer.join("").trim();
+
+    return {
+      correct: code === question.answer.trim()
+    };
   }
 
-  static evalDate(question: any, answer: string) {
+  private static evalDate(question: Question, answer: string) {
+
+    const normalizedAnswer =
+      this.normalizeDate(answer);
+
+    const normalizedExpected =
+      this.normalizeDate(question.answer);
+
     return {
-      correct: answer === question.answer
+      correct:
+        normalizedAnswer === normalizedExpected
     };
+  }
+
+  private static normalizeDate(date: string) {
+
+    if (!date) return "";
+
+    if (date.includes("-") && date.length === 10) {
+
+      const parts = date.split("-");
+
+      if (parts[0].length === 4) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+    }
+
+    return date;
   }
 }

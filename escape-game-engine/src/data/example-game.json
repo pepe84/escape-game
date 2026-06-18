@@ -10,7 +10,7 @@
     },
     {
       "title": "Primera prova",
-      "content": "Quin és el nom de la ciutat?",
+      "content": "A quina ciutat es celebra el festival Nowa Reggae?",
       "question": {
         "type": "text",
         "formatHelp": "No té en compte minúscules / majúscules",
@@ -29,7 +29,7 @@
     {
       "type": "question",
       "title": "Codi secret",
-      "content": "Introdueix el codi correcte",
+      "content": "El gran germà et vigila...",
       "question": {
         "type": "code",
         "penaltySeconds": 60,
@@ -37,16 +37,15 @@
           "digits": 4
         },
         "hints": [
-          "Primer dígit = 5",
-          "Segon dígit = 7"
+          "Llibre de ciencia ficció"
         ],
-        "answer": "5732"
+        "answer": "1984"
       }
     },
     {
       "type": "question",
       "title": "Escull una opció",
-      "content": "Quin color és correcte?",
+      "content": "Quin color podem veure amunt i avall?",
       "question": {
         "type": "select",
         "config": {
@@ -55,18 +54,29 @@
             "Vermell",
             "Verd",
             "Groc"
+          ],
+          "emptyOption": [
+            "-- Tria --"
           ]
         },
-        "answer": "Verd"
+        "hints": [
+          "Pensa en una obra de teatre",
+          "Si mires amunt i avall mentre et banyes?"
+        ],
+        "answer": "Blau"
       }
     },
     {
+      "title": "Mar i cel",
+      "content": "El blau del mar i del cel!"
+    },    
+    {
       "title": "Data històrica",
-      "content": "Indica la data correcta",
+      "content": "Quin dia històric commemora la Diada de Catalunya?",
       "question": {
         "type": "date",
-        "formatHelp": "Format DD-MM-AAAA",
-        "answer": "12-06-1881"
+        "formatHelp": "El format de data depen del navegador",
+        "answer": "11-09-1714"
       }
     },
     {

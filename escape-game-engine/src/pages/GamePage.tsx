@@ -5,6 +5,8 @@ import { useGamePersistence } from "../hooks/useGamePersistence";
 import { GameEngineService } from "../services/GameEngineService";
 import { QuestionEngineService } from "../services/QuestionEngineService";
 import { isEmpty } from "../utils/isEmpty";
+import { QuestionRenderer } from "../components/questions/QuestionRenderer";
+import type { QuestionAnswer } from "../models/QuestionAnswer";
 
 export function GamePage() {
 
@@ -12,7 +14,7 @@ export function GamePage() {
   const { commit } = useGamePersistence();
   const navigate = useNavigate();
 
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState<QuestionAnswer>("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,6 +24,21 @@ export function GamePage() {
   if (!game || !state) return null;
 
   const page = game.pages[state.currentPageIndex];
+
+  useEffect(() => {
+
+    if (!page?.question) {
+      setAnswer("");
+      return;
+    }
+
+    setAnswer(
+      QuestionEngineService.getInitialAnswer(
+        page.question
+      )
+    );
+
+  }, [page]);
 
   const finishGame = () => {
     commit(GameEngineService.finishGame(state));
@@ -67,14 +84,12 @@ export function GamePage() {
       {page.question && (
         <div className="space-y-4">
 
-          <input
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            className="w-full border rounded-lg px-4 py-3"
-            placeholder="Resposta..."
-            required
+          <QuestionRenderer
+            question={page.question}
+            answer={answer}
+            onChange={setAnswer}
           />
-
+          
           {page.question?.formatHelp && (
             <div className="text-gray-500 text-sm">
               {page.question?.formatHelp}

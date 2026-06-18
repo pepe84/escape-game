@@ -1,12 +1,15 @@
-export interface EscapeGame {
+import type { Question } from "./Question";
 
-  version: string;
-
+export interface EscapeGamePage {
   title: string;
+  content?: string;
+  question?: Question;
+}
 
+export interface EscapeGame {
+  version: string;
+  title: string;
   description?: string;
-
   durationMinutes: number;
-
-  pages: GamePage[];
+  pages: EscapeGamePage[];
 }

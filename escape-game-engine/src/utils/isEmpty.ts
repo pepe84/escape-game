@@ -1,3 +1,12 @@
-export function isEmpty(answer: any) {
-  return answer === null || answer === undefined || String(answer).trim() === "";
+export function isEmpty(value: any) {
+
+  if (value === null || value === undefined) {
+    return true;
+  }
+
+  if (Array.isArray(value)) {
+    return value.every(v => isEmpty(v));
+  }
+
+  return String(value).trim() === "";
 }
