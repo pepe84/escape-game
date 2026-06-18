@@ -4,7 +4,8 @@ export function HintsModal({
   hints,
   answer,
   unlockedCount,
-  onUnlock,
+  onUnlockHint,
+  onUnlockSolution,
   onClose
 }: any) {
 
@@ -18,7 +19,7 @@ export function HintsModal({
 
   const unlockNextHint = () => {
     if (!canShowSolution) {
-        onUnlock();
+        onUnlockHint();
     }
     setTab(tab+1);
   };

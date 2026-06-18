@@ -43,9 +43,7 @@ export function useCountdown() {
 
     hasNavigatedRef.current = true;
 
-    const finished =
-      GameEngineService.finishGame(state);
-
+    const finished = GameEngineService.finishGame(state);
     setState(finished);
     StorageService.saveState(finished);
 

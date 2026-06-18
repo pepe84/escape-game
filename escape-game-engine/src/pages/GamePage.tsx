@@ -58,7 +58,7 @@ export function GamePage() {
 
     const timer = setTimeout(() => {
       setVisible(true);
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(timer);
 
@@ -211,11 +211,18 @@ export function GamePage() {
         hints={page.question.hints}
         answer={page.question.answer}
         unlockedCount={unlockedCount}
-        onUnlock={() => {
+        onUnlockHint={() => {
           updateGameState(
             GameEngineService.unlockHint(
               state,
               state.currentPageIndex
+            )
+          );
+        }}
+        onUnlockSolution={() => {
+          updateGameState(
+            GameEngineService.unlockSolution(
+              state
             )
           );
         }}

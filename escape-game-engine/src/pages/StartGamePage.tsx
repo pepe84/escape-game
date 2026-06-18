@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
+import { GameEngineService } from "../services/GameEngineService";
 import { StorageService } from "../services/StorageService";
 
 export function StartGamePage() {
@@ -15,16 +16,7 @@ export function StartGamePage() {
   if (!game) return null;
 
   const startGame = () => {
-    const state = {
-      teamName,
-      startedAt: new Date().toISOString(),
-      currentPageIndex: 0,
-      penaltiesSeconds: 0,
-      finished: false,
-      events: [],
-      unlockedHints: {}
-    };
-
+    const state = GameEngineService.factory(teamName);
     setState(state);
     StorageService.saveGame(game);
     StorageService.saveState(state);
