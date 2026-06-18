@@ -1,7 +1,7 @@
 import { Brain } from 'lucide-react';
 import { useCountdown } from "../../hooks/useCountdown";
 import { useGame } from "../../context/GameContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { StorageService } from "../../services/StorageService";
 
 export function Header() {
@@ -20,14 +20,17 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white border-b border-slate-700 z-50">
-      <div className="h-full px-6 flex items-center justify-between">
+      <nav className="h-full px-6 flex items-center justify-between font-semibold">
 
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-slate-900">
-            <Brain size={24} />
+        <Link to="/">
+          <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-slate-900">
+                <Brain size={24} />
+              </div>
+              <span className="md:hidden">EGE</span>
+              <span className="invisible md:visible">Escape Game Engine</span>
           </div>
-          <span className="font-semibold">Escape Game Engine</span>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-4">
           
@@ -38,14 +41,14 @@ export function Header() {
           {state && (
             <button
               onClick={abandonGame}
-              className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded"
+              className="bg-red-700 hover:bg-red-600 text-white text-sm px-3 py-1 rounded"
             >
               Finalitzar
             </button>
           )}
 
         </div>
-      </div>
+      </nav>
     </header>
   );
 }

@@ -12,6 +12,7 @@ export function HomePage() {
 
   useEffect(() => {
     if (state && !state.finished) navigate("/game");
+    if (state?.finished) navigate("/summary");
   }, [state]);
 
   const handleGame = (result) => {

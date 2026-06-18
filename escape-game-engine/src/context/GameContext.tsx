@@ -20,8 +20,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const reset = () => {
     setGame(null);
     setState(null);
-    localStorage.removeItem("escape-game");
-    localStorage.removeItem("escape-game-state");
   };
 
   return (

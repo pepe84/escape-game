@@ -1,3 +1,5 @@
+import type { GameEvent } from "./GameEvent";
+
 export interface GameState {
 
   teamName: string;

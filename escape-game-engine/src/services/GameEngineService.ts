@@ -28,4 +28,10 @@ export class GameEngineService {
   static isLastPage(game: any, state: GameState) {
     return state.currentPageIndex >= game.pages.length - 1;
   }
+
+  static getProgress(game: any, state: GameState) {
+    let current = state.currentPageIndex;
+    let total = game.pages.length;
+    return Math.round(Math.min(100, ((current + 1) / total) * 100));
+  }
 }
