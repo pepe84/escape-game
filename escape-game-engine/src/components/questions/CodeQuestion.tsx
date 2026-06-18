@@ -32,29 +32,17 @@ export function CodeQuestion({
 
       {Array.from({ length: digits }).map((_, index) => (
 
-        <select
+        <input
+          type="number" 
+          min="0" 
+          max="9"
           key={index}
           value={values[index]}
           onChange={(e) =>
             updateDigit(index, e.target.value)
           }
           className="w-16 border rounded-lg px-2 py-3 text-center"
-        >
-
-          <option value=""></option>
-
-          {Array.from({ length: 10 }).map((_, digit) => (
-
-            <option
-              key={digit}
-              value={String(digit)}
-            >
-              {digit}
-            </option>
-
-          ))}
-
-        </select>
+        />
 
       ))}
 
