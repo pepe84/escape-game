@@ -1,52 +1,61 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useGame } from "../context/GameContext";
-import { formatTime } from "../utils/formatTime";
+import { useNavigate } from "react-router-dom";
+import { GameClockService } from "../services/GameClockService";
 import { GameEngineService } from "../services/GameEngineService";
 import { StorageService } from "../services/StorageService";
-import { useNavigate } from "react-router-dom";
 
 export function useCountdown() {
+
   const { game, state, setState } = useGame();
   const [now, setNow] = useState(Date.now());
   const navigate = useNavigate();
 
+  const hasNavigatedRef = useRef(false);
+
   useEffect(() => {
+
+    if (state?.finished) return;
+
     const interval = setInterval(() => {
       setNow(Date.now());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+
+  }, [state?.finished]);
 
   const remainingSeconds = useMemo(() => {
+
     if (!game || !state) return 0;
 
-    const start = new Date(state.startedAt).getTime();
-    const elapsed = Math.floor((now - start) / 1000);
+    return GameClockService.getRemainingSeconds(game, state);
 
-    const total = game.durationMinutes * 60;
-    const penalties = state.penaltiesSeconds;
-
-    return Math.max(total - elapsed - penalties, 0);
   }, [game, state, now]);
 
-  const isFinished = remainingSeconds <= 0;
+  const isFinished =
+    state?.finished ||
+    GameClockService.isTimeOver(game, state);
 
   useEffect(() => {
-    if (!isFinished || !state || state.finished) return;
 
-    const finished = GameEngineService.finishGame(state);
+    if (!isFinished || !state || hasNavigatedRef.current) return;
+
+    hasNavigatedRef.current = true;
+
+    const finished =
+      GameEngineService.finishGame(state);
 
     setState(finished);
     StorageService.saveState(finished);
 
     navigate("/summary");
 
-  }, [isFinished]);
+  }, [isFinished, state]);
 
   return {
     remainingSeconds,
-    formatted: formatTime(remainingSeconds),
+    formatted: GameClockService.formatSeconds(remainingSeconds),
     isFinished
   };
 }
