@@ -34,4 +34,23 @@ export class GameEngineService {
     let total = game.pages.length;
     return Math.round(Math.min(100, ((current + 1) / total) * 100));
   }
+
+  static getUnlockedHintsCount(state: GameState, pageIndex: number) {
+    return state.unlockedHints?.[pageIndex] ?? 0;
+  }
+  
+  static unlockHint(state: GameState, pageIndex: number) {
+
+    const current =
+      state.unlockedHints?.[pageIndex] ?? 0;
+
+    return {
+      ...state,
+      unlockedHints: {
+        ...state.unlockedHints,
+        [pageIndex]: current + 1
+      }
+    };
+  }
+
 }

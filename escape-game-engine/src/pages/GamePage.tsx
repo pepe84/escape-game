@@ -7,6 +7,8 @@ import { isEmpty } from "../utils/isEmpty";
 import { QuestionRenderer } from "../components/questions/QuestionRenderer";
 import type { QuestionAnswer } from "../models/QuestionAnswer";
 import { StorageService } from "../services/StorageService";
+import { HintsModal } from "../components/HintsModal";
+import { CircleCheckBig, Lightbulb } from "lucide-react";
 
 export function GamePage() {
 
@@ -26,7 +28,11 @@ export function GamePage() {
   const page = game.pages[state.currentPageIndex];
   const totalPages = game.pages.length;
   const progress = GameEngineService.getProgress(game, state);
-    
+
+  const totalHints = page.question?.hints?.length ?? 0;
+  const [showHints, setShowHints] = useState(false);
+  const unlockedCount = GameEngineService.getUnlockedHintsCount(state, state.currentPageIndex);
+
   useEffect(() => {
 
     if (!page?.question) {
@@ -42,19 +48,19 @@ export function GamePage() {
 
   }, [page]);
 
-  const updateState = (state: any) => {
+  const updateGameState = (state: any) => {
     setState(state);
     StorageService.saveState(state);
   };
 
   const finishGame = () => {
-    updateState(GameEngineService.finishGame(state));
+    updateGameState(GameEngineService.finishGame(state));
     navigate("/summary");
   };
 
   const nextPage = () => {
     if (GameEngineService.isLastPage(game, state)) return finishGame();
-    updateState(GameEngineService.nextPage(state));
+    updateGameState(GameEngineService.nextPage(state));
   };
 
   const validateQuestion = () => {
@@ -66,12 +72,12 @@ export function GamePage() {
     const result = QuestionEngineService.evaluate(page.question, answer);
 
     if (!result.correct) {
-      updateState(GameEngineService.applyPenalty(state, 60));
+      updateGameState(GameEngineService.applyPenalty(state, 60));
       setError("Incorrecte (+1 minut)");
       return;
     }
 
-    updateState(GameEngineService.registerSuccess(state));
+    updateGameState(GameEngineService.registerSuccess(state));
     setError(null);
     setAnswer("");
     nextPage();
@@ -83,7 +89,7 @@ export function GamePage() {
       <h2 className="text-xl font-bold">
         {page.title}
       </h2>
-      
+
       <div className="w-full space-y-1">
 
         <div className="flex justify-between text-sm text-gray-500">
@@ -114,17 +120,43 @@ export function GamePage() {
           />
           
           {page.question?.formatHelp && (
-            <div className="text-gray-500 text-sm">
-              {page.question?.formatHelp}
-            </div>
+          <div className="text-gray-500 text-sm">
+            {page.question?.formatHelp}
+          </div>
+          )}
+
+          { totalHints > 0 && (
+          <button
+            onClick={() => setShowHints(true)}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4"
+          >
+            <Lightbulb className="inline mr-2"/> Mostrar pistes
+          </button>
+          )}
+          { showHints && (
+          <HintsModal
+            hints={page.question.hints}
+            answer={page.question.answer}
+            unlockedCount={unlockedCount}
+            onUnlock={() => {
+              updateGameState(
+                GameEngineService.unlockHint(
+                  state,
+                  state.currentPageIndex
+                )
+              );
+            }}
+            onClose={() => setShowHints(false)}
+          />          
           )}
 
           <button
             onClick={validateQuestion}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
           >
-            Resoldre
+            <CircleCheckBig className="inline mr-2"/> Resoldre
           </button>
+          
 
           {error && (
             <div className="text-red-500 text-sm">
