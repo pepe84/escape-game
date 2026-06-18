@@ -48,6 +48,22 @@ export function GamePage() {
 
   }, [page]);
 
+  const [visible, setVisible] = useState(true);
+  const [success, setSuccess] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  useEffect(() => {
+
+    setVisible(false);
+
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+
+  }, [state.currentPageIndex]);
+
   const updateGameState = (state: any) => {
     setState(state);
     StorageService.saveState(state);
@@ -72,6 +88,10 @@ export function GamePage() {
     const result = QuestionEngineService.evaluate(page.question, answer);
 
     if (!result.correct) {
+      setShake(true);
+      setTimeout(() => {
+        setShake(false)
+      }, 500);
       updateGameState(GameEngineService.applyPenalty(state, 60));
       setError("Incorrecte (+1 minut)");
       return;
@@ -80,104 +100,128 @@ export function GamePage() {
     updateGameState(GameEngineService.registerSuccess(state));
     setError(null);
     setAnswer("");
-    nextPage();
+
+    setSuccess(true);
+    setTimeout(() => {
+      setSuccess(false);
+      nextPage();
+    }, 1000);
   };
 
   return (
     <>
-      
-      <h2 className="text-xl font-bold">
-        {page.title}
-      </h2>
+      <div
+        className={`space-y-4 transition-all duration-300 ${
+          visible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-2"
+        }`}
+      >
+        
+        <h2 className="text-xl font-bold">
+          {page.title}
+        </h2>
 
-      <div className="w-full space-y-1">
+        <div className="w-full space-y-1">
 
-        <div className="flex justify-between text-sm text-gray-500">
-          <span>{state.currentPageIndex + 1} de {totalPages}</span>
-          <span>{progress}%</span>
-        </div>
-
-        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-emerald-500 transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-      </div>
-
-      <div className="text-gray-700 whitespace-pre-wrap">
-        {page.content}
-      </div>
-
-      {page.question && (
-        <div className="space-y-4">
-
-          <QuestionRenderer
-            question={page.question}
-            answer={answer}
-            onChange={setAnswer}
-          />
-          
-          {page.question?.formatHelp && (
-          <div className="text-gray-500 text-sm">
-            {page.question?.formatHelp}
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>{state.currentPageIndex + 1} de {totalPages}</span>
+            <span>{progress}%</span>
           </div>
-          )}
 
-          { totalHints > 0 && (
-          <button
-            onClick={() => setShowHints(true)}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4"
+          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+        </div>
+
+        <div className="text-gray-700 whitespace-pre-wrap">
+          {page.content}
+        </div>
+
+        {page.question && (
+          <div
+            className={`space-y-4 ${
+              shake ? "animate-shake" : ""
+            }`}
           >
-            <Lightbulb className="inline mr-2"/> Mostrar pistes
-          </button>
-          )}
-          { showHints && (
-          <HintsModal
-            hints={page.question.hints}
-            answer={page.question.answer}
-            unlockedCount={unlockedCount}
-            onUnlock={() => {
-              updateGameState(
-                GameEngineService.unlockHint(
-                  state,
-                  state.currentPageIndex
-                )
-              );
-            }}
-            onClose={() => setShowHints(false)}
-          />          
-          )}
-
-          <button
-            onClick={validateQuestion}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
-          >
-            <CircleCheckBig className="inline mr-2"/> Resoldre
-          </button>
-          
-
-          {error && (
-            <div className="text-red-500 text-sm">
-              {error}
+            <QuestionRenderer
+              question={page.question}
+              answer={answer}
+              onChange={setAnswer}
+            />
+            
+            {page.question?.formatHelp && (
+            <div className="text-gray-500 text-sm">
+              {page.question?.formatHelp}
             </div>
-          )}
+            )}
 
-        </div>
+            <div className="flex justify-end">
+              { totalHints > 0 && (
+              <button
+                onClick={() => setShowHints(true)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4"
+              >
+                <Lightbulb className="inline mr-2"/> Mostrar pistes
+              </button>
+              )}
+
+              <button
+                onClick={validateQuestion}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+              >
+                <CircleCheckBig className="inline mr-2"/> Resoldre
+              </button>
+            </div>
+
+            {success && (
+              <div className="bg-emerald-100 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg">
+                Correcte!
+              </div>
+            )}
+
+            {error && (
+              <div className="text-red-500 text-sm">
+                {error}
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {!page.question && (
+          <div className="flex justify-end">
+            <button
+              onClick={nextPage}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+            >
+              Següent
+            </button>
+          </div>
+        )}
+
+      </div>
+
+      { showHints && (
+      <HintsModal
+        hints={page.question.hints}
+        answer={page.question.answer}
+        unlockedCount={unlockedCount}
+        onUnlock={() => {
+          updateGameState(
+            GameEngineService.unlockHint(
+              state,
+              state.currentPageIndex
+            )
+          );
+        }}
+        onClose={() => setShowHints(false)}
+      />          
       )}
-
-      {!page.question && (
-        <div className="flex justify-end">
-          <button
-            onClick={nextPage}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
-          >
-            Següent
-          </button>
-        </div>
-      )}
-
     </>
   );
 }

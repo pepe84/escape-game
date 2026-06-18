@@ -42,6 +42,7 @@ export function CodeQuestion({
             updateDigit(index, e.target.value)
           }
           className="w-16 border rounded-lg px-2 py-3 text-center"
+          required
         />
 
       ))}
