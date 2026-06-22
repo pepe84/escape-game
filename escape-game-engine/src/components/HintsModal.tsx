@@ -1,107 +1,142 @@
 import { useState } from "react";
+import { HintEngineService } from "../services/HintEngineService";
+
+interface Props {
+  hints: string[];
+  answer: string;
+  state: Record<string, boolean>;
+  onUnlockHint: () => void;
+  onUnlockSolution: () => void;
+  onClose: () => void;
+}
 
 export function HintsModal({
   hints,
   answer,
-  unlockedCount,
+  state,
   onUnlockHint,
   onUnlockSolution,
   onClose
-}: any) {
+}: Props) {
 
   const [tab, setTab] = useState(0);
+  const unlockedHints = HintEngineService.countUsedHints(state);
 
-  const maxIndex =
-    Math.min(unlockedCount, hints.length);
+  const solutionUnlocked =
+    HintEngineService.isSolutionUnlocked(
+      state
+    );
 
-  const canShowSolution =
-    unlockedCount >= hints.length;
+  const allHintsUnlocked =
+    HintEngineService.allHintsUnlocked(
+      state
+    );
 
-  const unlockNextHint = () => {
-    if (!canShowSolution) {
-        onUnlockHint();
+  const unlockNext = () => {
+    if (!allHintsUnlocked) {
+      onUnlockHint();
+      setTab(unlockedHints);
+    } else if (!solutionUnlocked) {
+      onUnlockSolution();
+      setTab(hints.length);
     }
-    setTab(tab+1);
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 
-      <div className="bg-white rounded-xl w-[500px] p-4 space-y-4">
+      <div className="bg-white rounded-xl w-[520px] p-5 space-y-4 shadow-xl">
 
         <div className="flex justify-between">
 
-            <div className="flex gap-2  pb-2">
+          <div className="flex gap-2 flex-wrap">
 
-            {hints.map((_: any, i: number) => (
+            {hints.map((hint, index) => {
+
+              const unlocked =
+                HintEngineService.isHintUnlocked(
+                  state,
+                  index
+                );
+
+              return (
                 <button
-                key={i}
-                onClick={() => setTab(i)}
-                disabled={i >= maxIndex}
-                className={`px-3 py-1 text-sm rounded ${
-                    i != tab && i <= maxIndex
-                    ? "bg-gray-200"
-                    : ""
-                }${
-                    i > maxIndex
-                    ? " bg-gray-100 text-gray-400"
-                    : ""
-                }`}
+                  key={index}
+                  disabled={!unlocked}
+                  onClick={() => setTab(index)}
+                  className={`px-3 py-1 rounded text-sm ${
+                    unlocked
+                      ? tab === index
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
                 >
-                Pista {i + 1}
+                  Pista {index + 1}
                 </button>
-            ))}
+              );
+            })}
 
             <button
-                onClick={() => setTab(hints.length)}
-                disabled={!canShowSolution}
-                className="px-3 py-1 text-sm rounded bg-green-200"
+              disabled={!solutionUnlocked}
+              onClick={() => setTab(hints.length)}
+              className={`px-3 py-1 rounded text-sm ${
+                tab === hints.length
+                  ? "bg-green-600 text-white"
+                  : solutionUnlocked
+                    ? "bg-green-200"
+                    : "bg-gray-100 text-gray-400"
+              }`}
             >
-                Solució
+              Solució
             </button>
 
-            </div>
-            
-            <button
+          </div>
+
+          <button
             onClick={onClose}
-            className="text-gray-500 px-4"
-            >
-            X
-            </button>
+            className="px-2"
+          >
+            ✕
+          </button>
+
         </div>
 
-        <div className="min-h-[100px] text-gray-700">
+        <div className="min-h-[120px]">
 
-          {tab < hints.length && (
+          {tab < hints.length && 
+           HintEngineService.isHintUnlocked(state, tab) && (
             <p>{hints[tab]}</p>
           )}
 
-          {tab === hints.length && canShowSolution && (
-            <p className="font-bold text-green-800">
-              {answer}
-            </p>
+          {tab === hints.length &&
+           solutionUnlocked && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="font-bold text-green-700 mb-2">
+                Solució
+              </div>
+              <div>{answer}</div>
+            </div>
           )}
 
         </div>
 
+        <div className="flex justify-end">
 
-        {tab <= hints.length-1 && (
-        <button
-        onClick={unlockNextHint}
-        className={`bg-blue-500 text-white px-3 py-1 rounded ${
-            tab === hints.length-1
-                ? "bg-red-700"
-                : ""
-            }`}
-        >
-        {tab === hints.length-1 && (
-            <>Mostrar solució</>
-        )}
-        {tab < hints.length-1 && (
-            <>Mostrar següent pista</>                
-        )}
-        </button>
-        )}
+          {!solutionUnlocked && (
+
+            <button
+              onClick={unlockNext}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            >
+              {allHintsUnlocked
+                ? "Mostrar solució"
+                : `Mostrar pista ${unlockedHints+1}`}
+            </button>
+
+          )}
+
+        </div>
 
       </div>
 

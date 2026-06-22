@@ -29,9 +29,16 @@ export function GamePage() {
   const totalPages = game.pages.length;
   const progress = GameEngineService.getProgress(game, state);
 
-  const totalHints = page.question?.hints?.length ?? 0;
   const [showHints, setShowHints] = useState(false);
-  const unlockedCount = GameEngineService.getUnlockedHintsCount(state, state.currentPageIndex);
+  const totalHints = page.question?.hints?.length ?? 0;
+  const hintState =
+    page.question?.hints
+      ? GameEngineService.getHints(
+          state,
+          state.currentPageIndex,
+          page.question.hints
+        )
+      : null;
 
   useEffect(() => {
 
@@ -206,23 +213,26 @@ export function GamePage() {
 
       </div>
 
-      { showHints && (
+      { totalHints > 0 && showHints && hintState && (
       <HintsModal
         hints={page.question.hints}
         answer={page.question.answer}
-        unlockedCount={unlockedCount}
+        state={hintState}
         onUnlockHint={() => {
           updateGameState(
             GameEngineService.unlockHint(
               state,
-              state.currentPageIndex
+              state.currentPageIndex,
+              page.question!.hints!
             )
           );
         }}
         onUnlockSolution={() => {
           updateGameState(
             GameEngineService.unlockSolution(
-              state
+              state,
+              state.currentPageIndex,
+              page.question!.hints!
             )
           );
         }}

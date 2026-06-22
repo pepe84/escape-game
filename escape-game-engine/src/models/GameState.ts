@@ -7,6 +7,6 @@ export interface GameState {
   penaltiesSeconds: number;
   finished: boolean;
   finishedAt?: string;
-  unlockedHints: Record<string, number>;
+  unlockedHints: Record<number, Record<string, boolean>>;
   events: GameEvent[];
 }
