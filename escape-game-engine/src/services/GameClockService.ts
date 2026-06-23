@@ -1,3 +1,4 @@
+import type { EscapeGame } from "../models/EscapeGame";
 import type { GameState } from "../models/GameState";
 
 export class GameClockService {
@@ -16,7 +17,7 @@ export class GameClockService {
     return state?.penaltiesSeconds ?? 0;
   }
 
-  static getRemainingSeconds(game: any, state: GameState): number {
+  static getRemainingSeconds(game: EscapeGame, state: GameState): number {
 
     const total = (game?.durationMinutes ?? 0) * 60;
 
@@ -27,11 +28,11 @@ export class GameClockService {
     return Math.max(total - elapsed - penalties, 0);
   }
 
-  static isTimeOver(game: any, state: GameState): boolean {
+  static isTimeOver(game: EscapeGame, state: GameState): boolean {
     return this.getRemainingSeconds(game, state) <= 0;
   }
 
-  static getUsedSeconds(game: any, state: GameState): number {
+  static getUsedSeconds(game: EscapeGame, state: GameState): number {
 
     const total = (game?.durationMinutes ?? 0) * 60;
 

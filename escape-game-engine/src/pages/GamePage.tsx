@@ -9,6 +9,7 @@ import type { QuestionAnswer } from "../models/QuestionAnswer";
 import { StorageService } from "../services/StorageService";
 import { HintsModal } from "../components/HintsModal";
 import { CircleCheckBig, Lightbulb } from "lucide-react";
+import type { GameState } from "../models/GameState";
 
 export function GamePage() {
 
@@ -41,18 +42,15 @@ export function GamePage() {
       : null;
 
   useEffect(() => {
-
     if (!page?.question) {
       setAnswer("");
       return;
     }
-
     setAnswer(
       QuestionEngineService.getInitialAnswer(
         page.question
       )
     );
-
   }, [page]);
 
   const [visible, setVisible] = useState(true);
@@ -60,30 +58,23 @@ export function GamePage() {
   const [shake, setShake] = useState(false);
 
   useEffect(() => {
-
     setVisible(false);
-
     const timer = setTimeout(() => {
       setVisible(true);
     }, 200);
-
     return () => clearTimeout(timer);
-
   }, [state.currentPageIndex]);
 
-  const updateGameState = (state: any) => {
-    setState(state);
-    StorageService.saveState(state);
+  const updateGameState = (nextState: GameState) => {
+    setState(nextState);
+    StorageService.saveState(nextState);
+    if (nextState.finished) {
+      navigate("/summary");
+    }
   };
 
-  const finishGame = () => {
-    updateGameState(GameEngineService.finishGame(state));
-    navigate("/summary");
-  };
-
-  const nextPage = () => {
-    if (GameEngineService.isLastPage(game, state)) return finishGame();
-    updateGameState(GameEngineService.nextPage(state));
+  const nextPage = (nextState: GameState = state) => {
+    updateGameState(GameEngineService.continue(game, nextState));
   };
 
   const validateQuestion = () => {
@@ -94,25 +85,25 @@ export function GamePage() {
     }
     const result = QuestionEngineService.evaluate(page.question, answer);
 
-    if (!result.correct) {
+    if (result.correct) {
+      setError(null);
+      setAnswer("");
+
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        nextPage(GameEngineService.registerSuccess(state));
+      }, 750);
+
+    } else {
       setShake(true);
       setTimeout(() => {
         setShake(false)
       }, 500);
+
       updateGameState(GameEngineService.applyPenalty(state, 60));
       setError("Incorrecte (+1 minut)");
-      return;
     }
-
-    updateGameState(GameEngineService.registerSuccess(state));
-    setError(null);
-    setAnswer("");
-
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      nextPage();
-    }, 1000);
   };
 
   return (
@@ -203,7 +194,7 @@ export function GamePage() {
         {!page.question && (
           <div className="flex justify-end">
             <button
-              onClick={nextPage}
+              onClick={() => nextPage(state)}
               className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
             >
               Següent

@@ -1,3 +1,4 @@
+import type { EscapeGame } from "../models/EscapeGame";
 import type { GameEvent } from "../models/GameEvent";
 import { GameEventType } from "../models/GameEventType";
 import type { GameState } from "../models/GameState";
@@ -29,6 +30,15 @@ export class GameEngineService {
   /************************
    * NAVIGATION           *
    ************************/
+
+  static continue(game: EscapeGame, state: GameState): GameState {
+
+    if (this.isLastPage(game, state)) {
+      return this.finishGame(state);
+    }
+
+    return this.nextPage(state);
+  }
 
   static nextPage(state: GameState): GameState {
 
@@ -68,9 +78,9 @@ export class GameEngineService {
   }
   
   /************************
-   * ANSWERS              *
+   * QUESTIONS & ANSWERS  *
    ************************/
-
+  
   static registerSuccess(state: GameState): GameState {
 
     return this.addEvent(state, {
@@ -115,25 +125,31 @@ export class GameEngineService {
     hints: string[]
   ) {
 
-    const hintState =
-      this.getHintState(
-        state,
-        pageIndex,
-        hints
-      );
+    const hintState = this.getHintState(
+      state,
+      pageIndex,
+      hints
+    );
 
-    const updated =
-      HintEngineService.unlockHint(
-        hintState
-      );
+    const updated = HintEngineService.unlockHint(
+      hintState
+    );
 
-    return {
+    const nextState = {
       ...state,
       unlockedHints: {
         ...state.unlockedHints,
         [pageIndex]: updated
       }
-    };
+    }
+
+    const hintNumber = HintEngineService.countUsedHints(updated);
+
+    return this.addEvent(nextState, {
+      pageIndex,
+      type: GameEventType.HINT_OPENED,
+      value: String(hintNumber)
+    });
   }
 
   static unlockSolution(
@@ -142,25 +158,28 @@ export class GameEngineService {
     hints: string[]
   ) {
 
-    const hintState =
-      this.getHintState(
-        state,
-        pageIndex,
-        hints
-      );
+    const hintState = this.getHintState(
+      state,
+      pageIndex,
+      hints
+    );
 
-    const updated =
-      HintEngineService.unlockSolution(
-        hintState
-      );
+    const updated = HintEngineService.unlockSolution(
+      hintState
+    );
 
-    return {
+    const nextState = {
       ...state,
       unlockedHints: {
         ...state.unlockedHints,
         [pageIndex]: updated
       }
     };
+
+    return this.addEvent(nextState, {
+      pageIndex,
+      type: GameEventType.SOLUTION_OPENED
+    });
   }
 
   static getHints(
