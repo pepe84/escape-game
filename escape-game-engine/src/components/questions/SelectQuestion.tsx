@@ -7,9 +7,8 @@ export function SelectQuestion({
   onChange
 }: QuestionProps) {
 
-  const emptyOption =
-    (question.config as SelectQuestionConfig)?.emptyOption ?? "--Choose--";
-
+  const emptyOption = "---";
+  
   const options =
     (question.config as SelectQuestionConfig)?.options ?? [];
 

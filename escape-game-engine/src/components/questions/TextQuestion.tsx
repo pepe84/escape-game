@@ -1,4 +1,4 @@
-import type { TextQuestionConfig } from "../../models/Question";
+import type { TextOrCodeQuestionConfig } from "../../models/Question";
 import type { QuestionProps } from "../../models/QuestionProps";
 
 export function TextQuestion({
@@ -8,7 +8,7 @@ export function TextQuestion({
 }: QuestionProps) {
 
   const length =
-    (question.config as TextQuestionConfig)?.length;
+    (question.config as TextOrCodeQuestionConfig)?.length;
 
   return (
     <input

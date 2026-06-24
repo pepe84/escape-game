@@ -11,5 +11,6 @@ export interface EscapeGame {
   title: string;
   description?: string;
   durationMinutes: number;
+  defaultPenaltySeconds: number;
   pages: EscapeGamePage[];
 }

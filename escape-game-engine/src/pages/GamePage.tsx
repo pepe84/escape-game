@@ -101,8 +101,9 @@ export function GamePage() {
         setShake(false)
       }, 500);
 
-      updateGameState(GameEngineService.applyPenalty(state, 60));
-      setError("Incorrecte (+1 minut)");
+      const penalty = page.question.penaltySeconds ?? game.defaultPenaltySeconds;
+      updateGameState(GameEngineService.applyPenalty(state, penalty));
+      setError(`Incorrecte (+${penalty} s)`);
     }
   };
 

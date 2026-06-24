@@ -1,24 +1,18 @@
 import type { QuestionType } from "./QuestionType";
 
-export interface TextQuestionConfig {
+export interface TextOrCodeQuestionConfig {
   length?: number;
 }
 
 export interface SelectQuestionConfig {
   options: string[];
-  emptyOption: string;
-}
-
-export interface CodeQuestionConfig {
-  digits: number;
 }
 
 export interface DateQuestionConfig {}
 
 export type QuestionConfig =
-  | TextQuestionConfig
+  | TextOrCodeQuestionConfig
   | SelectQuestionConfig
-  | CodeQuestionConfig
   | DateQuestionConfig;
 
 export interface Question {

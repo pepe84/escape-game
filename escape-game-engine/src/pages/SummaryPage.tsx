@@ -51,11 +51,11 @@ export function SummaryPage() {
 
       {summary.gameCompleted ? (
         <div className="text-2xl font-bold text-center bg-emerald-50 border border-emerald-200 rounded-2xl p-8">
-          🧩 Enhorabona {summary.teamName}! Heu escapat!
+          Enhorabona {summary.teamName}! Joc superat! 🎉
         </div>
       ) : (
         <div className="text-2xl font-bold text-center bg-orange-50 border border-orange-200 rounded-2xl p-8">
-          😵 Ais {summary.teamName}! No heu superat el joc!
+          😵 Oh {summary.teamName}... No heu superat el joc!
         </div>
       )}
 

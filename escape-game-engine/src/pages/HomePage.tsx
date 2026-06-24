@@ -15,13 +15,14 @@ export function HomePage() {
     if (state?.finished) navigate("/summary");
   }, [state]);
 
-  const handleGame = (result) => {
+  const handleGame = (result: any) => {
     if (!result.success) {
-      console.error(result.error.issues);
+      const issues = (result.error as any)?.issues ?? [];
       setError(
-        result.error.issues
-          .map(i => `${i.path.join(".")} → ${i.message}`)
-          .join("\n")
+        issues.length 
+          ? issues.map(i => `${i.path.join(".")} → ${i.message}`)
+            .join("\n")
+          : "Error desconegut carregant el joc"
       );
     } else {
       console.log("Game OK", result.data);
@@ -38,11 +39,7 @@ export function HomePage() {
 
   const loadFile = async () => {
     if (!file) return;
-
-    const text = await file.text();
-    const json = JSON.parse(text);
-    const result = GameLoaderService.validate(json);
-
+    const result = await GameLoaderService.loadFromFile(file);
     handleGame(result);
   };
 
@@ -54,7 +51,7 @@ export function HomePage() {
         Carregar demo
       </button>
 
-      <input type="file" accept=".json" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+      <input type="file" accept=".json,.csv" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
 
       <button onClick={loadFile} className="w-full bg-blue-500 text-white py-3 rounded-xl">
         Carregar joc

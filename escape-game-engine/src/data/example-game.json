@@ -3,6 +3,7 @@
   "title": "Escape Game Demo",
   "description": "Joc de prova",
   "durationMinutes": 60,
+  "defaultPenaltySeconds": 45,
   "pages": [
     {
       "title": "Benvinguts",
@@ -14,7 +15,7 @@
       "question": {
         "type": "text",
         "formatHelp": "No té en compte minúscules / majúscules",
-        "penaltySeconds": 60,
+        "penaltySeconds": 30,
         "config": {
           "length": 8
         },
@@ -32,9 +33,9 @@
       "content": "El gran germà et vigila...",
       "question": {
         "type": "code",
-        "penaltySeconds": 60,
+        "penaltySeconds": 15,
         "config": {
-          "digits": 4
+          "length": 4
         },
         "hints": [
           "Llibre de ciencia ficció"
@@ -54,14 +55,11 @@
             "Vermell",
             "Verd",
             "Groc"
-          ],
-          "emptyOption": [
-            "-- Tria --"
           ]
         },
         "hints": [
-          "Pensa en una obra de teatre",
-          "Si mires amunt i avall mentre et banyes?"
+          "Què veus si mires amunt i avall mentre et banyes?",
+          "Pensa en una obra de teatre"
         ],
         "answer": "Blau"
       }

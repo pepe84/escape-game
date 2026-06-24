@@ -1,4 +1,4 @@
-import type { CodeQuestionConfig } from "../../models/Question";
+import type { TextOrCodeQuestionConfig } from "../../models/Question";
 import type { QuestionProps } from "../../models/QuestionProps";
 
 export function CodeQuestion({
@@ -8,7 +8,7 @@ export function CodeQuestion({
 }: QuestionProps) {
 
   const digits =
-    (question.config as CodeQuestionConfig)?.digits ?? 4;
+    (question.config as TextOrCodeQuestionConfig)?.length ?? 4;
 
   const values =
     Array.isArray(answer)
