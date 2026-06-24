@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import { GameEngineService } from "../services/GameEngineService";
 import { StorageService } from "../services/StorageService";
+import { useTranslation } from "react-i18next";
 
 export function StartGamePage() {
+  const { t } = useTranslation();
   const [teamName, setTeamName] = useState("");
   const { game, setState } = useGame();
   const navigate = useNavigate();
@@ -26,21 +28,26 @@ export function StartGamePage() {
   return (
     <>
       <h1 className="text-2xl font-bold mb-6">{game.title}</h1>
-
-      <input
-        value={teamName}
-        onChange={(e) => setTeamName(e.target.value)}
-        placeholder="Nom de l'equip"
-        className="w-full border rounded-lg px-4 py-3"
-      />
-
-      <button
-        onClick={startGame}
-        disabled={!teamName.trim()}
-        className="mt-4 w-full bg-emerald-500 text-white rounded-lg py-3 disabled:opacity-50"
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          startGame();
+        }}
       >
-        Començar partida
-      </button>
+        <input
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          placeholder={t("startPage.team")}
+          className="w-full border rounded-lg px-4 py-3"
+        />
+        <button
+          type="submit"
+          disabled={!teamName.trim()}
+          className="mt-4 w-full bg-emerald-500 text-white rounded-lg py-3 disabled:opacity-50"
+        >
+          {t("startPage.btn")}
+        </button>
+      </form>
     </>
   );
 }

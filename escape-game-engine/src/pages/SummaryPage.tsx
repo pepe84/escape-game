@@ -2,8 +2,10 @@ import { useGame } from "../context/GameContext";
 import type { GameEvent } from "../models/GameEvent";
 import { GameEventType } from "../models/GameEventType";
 import { SummaryService } from "../services/SummaryService";
+import { useTranslation } from "react-i18next";
 
 export function SummaryPage() {
+  const { t } = useTranslation();
   const { game, state } = useGame();
 
   if (!game || !state) {
@@ -21,25 +23,25 @@ export function SummaryPage() {
     switch (event.type) {
 
       case GameEventType.GAME_STARTED:
-        return "Partida iniciada";
+        return t("summaryPage.eventType.gs");
 
       case GameEventType.PAGE_OPENED:
-        return `Pàgina ${event.pageIndex + 1}`;
+        return t("summaryPage.eventType.po", {i: event.pageIndex + 1});
 
       case GameEventType.CORRECT_ANSWER:
-        return "Resposta correcta";
+        return t("summaryPage.eventType.ca");
 
       case GameEventType.WRONG_ANSWER:
-        return "Resposta incorrecta";
+        return t("summaryPage.eventType.wa");
 
       case GameEventType.HINT_OPENED:
-        return `Pista ${event.value} consultada`;
+        return t("summaryPage.eventType.ho", {i: event.value});
 
       case GameEventType.SOLUTION_OPENED:
-        return "Solució consultada";
+        return t("summaryPage.eventType.so");
 
       case GameEventType.GAME_FINISHED:
-        return "Partida finalitzada";
+        return t("summaryPage.eventType.gf");
 
       default:
         return event.type;
@@ -51,26 +53,26 @@ export function SummaryPage() {
 
       {summary.gameCompleted ? (
         <div className="text-2xl font-bold text-center bg-emerald-50 border border-emerald-200 rounded-2xl p-8">
-          Enhorabona {summary.teamName}! Joc superat! 🎉
+          {t("summaryPage.result.success",{team:summary.teamName})} 🎉
         </div>
       ) : (
         <div className="text-2xl font-bold text-center bg-orange-50 border border-orange-200 rounded-2xl p-8">
-          😵 Oh {summary.teamName}... No heu superat el joc!
+          😵 {t("summaryPage.result.failed",{team:summary.teamName})}
         </div>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Enigmes resolts
+            {t("summaryPage.statistics.correctAnswers")}
           </div>
           <div className="text-2xl font-bold">
-            {summary.correctAnswers} de {summary.totalQuestions}
+            {t("layout.counter",{current:summary.correctAnswers, total: summary.totalQuestions})}
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Temps utilitzat
+            {t("summaryPage.statistics.usedSeconds")}            
           </div>
           <div className="text-2xl font-bold">
             {summary.usedSeconds}
@@ -78,7 +80,7 @@ export function SummaryPage() {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Penalització acumulada
+            {t("summaryPage.statistics.penaltySeconds")}
           </div>
           <div className="text-2xl font-bold">
             {summary.penaltySeconds}s
@@ -86,7 +88,7 @@ export function SummaryPage() {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Respostes errònies
+            {t("summaryPage.statistics.wrongAnswers")}
           </div>
           <div className="text-2xl font-bold">
             {summary.wrongAnswers}
@@ -94,7 +96,7 @@ export function SummaryPage() {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Pistes usades
+            {t("summaryPage.statistics.hints")}
           </div>
           <div className="text-2xl font-bold">
             {summary.hints}
@@ -103,7 +105,7 @@ export function SummaryPage() {
 
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">
-            Solucions consultades
+            {t("summaryPage.statistics.solutions")}
           </div>
           <div className="text-2xl font-bold">
             {summary.solutions}
@@ -114,12 +116,12 @@ export function SummaryPage() {
 
       <div className="bg-white rounded-lg shadow p-8 text-center">
         <span className="text-5xl font-bold">{summary.score}</span> 
-        <span className="text-xl ml-2">punts</span>
+        <span className="text-xl ml-2">{t("summaryPage.statistics.points")}</span>
       </div>
 
       <div className="mt-8">
         <h3 className="text-lg font-semibold mb-4">
-          Historial
+          {t("summaryPage.history")}
         </h3>
         <ul className="bg-white rounded-lg shadow p-4 space-y-2">
           {state.events.map((event, index) => (

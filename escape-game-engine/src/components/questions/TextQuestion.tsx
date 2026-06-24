@@ -18,7 +18,6 @@ export function TextQuestion({
       maxLength={length}
       onChange={(e) => onChange(e.target.value)}
       className="w-full border rounded-lg px-4 py-3"
-      required
     />
   );
 }

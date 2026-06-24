@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HintEngineService } from "../services/HintEngineService";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   hints: string[];
@@ -19,6 +20,7 @@ export function HintsModal({
   onClose
 }: Props) {
 
+  const { t } = useTranslation();
   const [tab, setTab] = useState(0);
   const unlockedHints = HintEngineService.countUsedHints(state);
 
@@ -44,21 +46,16 @@ export function HintsModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-
       <div className="bg-white rounded-xl w-[520px] p-5 space-y-4 shadow-xl">
 
         <div className="flex justify-between">
-
           <div className="flex gap-2 flex-wrap">
-
             {hints.map((hint, index) => {
-
               const unlocked =
                 HintEngineService.isHintUnlocked(
                   state,
                   index
                 );
-
               return (
                 <button
                   key={index}
@@ -72,11 +69,10 @@ export function HintsModal({
                       : "bg-gray-100 text-gray-400"
                   }`}
                 >
-                  Pista {index + 1}
+                  {t("gamePage.hints.hint", {i: index + 1})}
                 </button>
               );
             })}
-
             <button
               disabled={!solutionUnlocked}
               onClick={() => setTab(hints.length)}
@@ -88,58 +84,48 @@ export function HintsModal({
                     : "bg-gray-100 text-gray-400"
               }`}
             >
-              Solució
+              {t("gamePage.hints.solution")}
             </button>
-
           </div>
-
           <button
             onClick={onClose}
             className="px-2"
           >
             ✕
           </button>
-
         </div>
 
         <div className="min-h-[120px]">
-
           {tab < hints.length && 
            HintEngineService.isHintUnlocked(state, tab) && (
             <p>{hints[tab]}</p>
           )}
-
           {tab === hints.length &&
            solutionUnlocked && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="font-bold text-green-700 mb-2">
-                Solució
+                {t("gamePage.hints.solution")}
               </div>
               <div>{answer}</div>
             </div>
           )}
-
         </div>
 
         <div className="flex justify-end">
-
           {!solutionUnlocked && (
-
             <button
               onClick={unlockNext}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
             >
               {allHintsUnlocked
-                ? "Mostrar solució"
-                : `Mostrar pista ${unlockedHints+1}`}
+                ? t("gamePage.hints.solutionBtn")
+                : t("gamePage.hints.hintBtn", {i: unlockedHints+1})
+              }
             </button>
-
           )}
-
         </div>
 
       </div>
-
     </div>
   );
 }

@@ -10,9 +10,10 @@ import { StorageService } from "../services/StorageService";
 import { HintsModal } from "../components/HintsModal";
 import { CircleCheckBig, Lightbulb } from "lucide-react";
 import type { GameState } from "../models/GameState";
+import { useTranslation } from "react-i18next";
 
 export function GamePage() {
-
+  const { t } = useTranslation();
   const { game, state, setState } = useGame();
   const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ export function GamePage() {
   const validateQuestion = () => {
 
     if (isEmpty(answer)) {
-      setError("Resposta obligatòria");
+      setError(t("gamePage.required"));
       return;
     }
     const result = QuestionEngineService.evaluate(page.question, answer);
@@ -103,7 +104,7 @@ export function GamePage() {
 
       const penalty = page.question.penaltySeconds ?? game.defaultPenaltySeconds;
       updateGameState(GameEngineService.applyPenalty(state, penalty));
-      setError(`Incorrecte (+${penalty} s)`);
+      setError(t("gamePage.wrongAnswer", {penalty}));
     }
   };
 
@@ -124,7 +125,7 @@ export function GamePage() {
         <div className="w-full space-y-1">
 
           <div className="flex justify-between text-sm text-gray-500">
-            <span>{state.currentPageIndex + 1} de {totalPages}</span>
+            <span>{t("layout.counter",{current:state.currentPageIndex + 1, total: totalPages})}</span>
             <span>{progress}%</span>
           </div>
 
@@ -142,10 +143,12 @@ export function GamePage() {
         </div>
 
         {page.question && (
-          <div
-            className={`space-y-4 ${
-              shake ? "animate-shake" : ""
-            }`}
+          <form
+            className={`space-y-4 ${shake ? "animate-shake" : ""}`}
+            onSubmit={(e) => {
+              e.preventDefault();
+              validateQuestion();
+            }}            
           >
             <QuestionRenderer
               question={page.question}
@@ -162,18 +165,19 @@ export function GamePage() {
             <div className="flex justify-end">
               { totalHints > 0 && (
               <button
+                type="button"
                 onClick={() => setShowHints(true)}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4"
               >
-                <Lightbulb className="inline mr-2"/> Mostrar pistes
+                <Lightbulb className="inline mr-2"/>  {t("gamePage.hintsBtn")}
               </button>
               )}
 
               <button
-                onClick={validateQuestion}
+                type="submit"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
               >
-                <CircleCheckBig className="inline mr-2"/> Resoldre
+                <CircleCheckBig className="inline mr-2"/>  {t("gamePage.submitBtn")}
               </button>
             </div>
 
@@ -189,7 +193,7 @@ export function GamePage() {
               </div>
             )}
 
-          </div>
+          </form>
         )}
 
         {!page.question && (
@@ -198,7 +202,7 @@ export function GamePage() {
               onClick={() => nextPage(state)}
               className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
             >
-              Següent
+              {t("gamePage.nextBtn")}
             </button>
           </div>
         )}

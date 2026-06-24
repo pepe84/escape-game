@@ -3,8 +3,9 @@ import { GameProvider } from "./context/GameContext";
 import { AppLayout } from "./components/layout/AppLayout";
 import { AppRoutes } from "./router/AppRoutes";
 import { AppBootstrap } from "./components/AppBootstrap";
+import "./i18n/i18n";
 
-export default function App() {
+export default function App() {  
   return (
     <BrowserRouter>
       <GameProvider>

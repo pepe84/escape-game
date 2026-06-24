@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import { GameLoaderService } from "../services/GameLoaderService";
-import exampleGame from "../data/example-game.json";
+import exampleGame from "../../public/data/example-game.json";
+import { useTranslation, Trans } from "react-i18next";
 
 export function HomePage() {
+  const { t } = useTranslation();
   const { setGame, state } = useGame();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
@@ -22,7 +24,7 @@ export function HomePage() {
         issues.length 
           ? issues.map(i => `${i.path.join(".")} → ${i.message}`)
             .join("\n")
-          : "Error desconegut carregant el joc"
+          : t("homePage.loadingError")
       );
     } else {
       console.log("Game OK", result.data);
@@ -47,17 +49,43 @@ export function HomePage() {
     <>
       <h1 className="text-3xl font-bold">Escape Game Engine</h1>
 
-      <button onClick={loadExample} className="w-full bg-emerald-500 text-white py-3 rounded-xl">
-        Carregar demo
-      </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-      <input type="file" accept=".json,.csv" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-2xl font-bold">
+            {t("homePage.section1.title")}
+          </h2>
+          <div className="text-gray-500 mt-4 h-50">
+            {t("homePage.section1.body")}
+          </div>
+          <button onClick={loadExample} className="w-full bg-emerald-500 text-white py-3 rounded-xl">
+            {t("homePage.section1.btn")}
+          </button>
+        </div>
 
-      <button onClick={loadFile} className="w-full bg-blue-500 text-white py-3 rounded-xl">
-        Carregar joc
-      </button>
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-2xl font-bold">
+            {t("homePage.section2.title")}
+          </h2>
+          <div className="text-gray-500 mt-4 h-44">
+            <Trans
+              i18nKey="homePage.section2.body"
+              components={{
+                csvLink: (<a href="/data/example-game.csv" download />),
+                jsonLink: (<a href="/data/example-game.json" download />),
+              }}
+            />
+          </div>
+          <div>
+            <input type="file" accept=".json,.csv" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+            <button onClick={loadFile} className="w-full bg-blue-500 text-white py-3 rounded-xl">
+              {t("homePage.section2.btn")}
+            </button>
+            {error && <pre className="text-red-500 whitespace-pre-wrap">{error}</pre>}
+          </div>
+        </div>
 
-      {error && <pre className="text-red-500 whitespace-pre-wrap">{error}</pre>}
+      </div>
     </>
   );
 }
