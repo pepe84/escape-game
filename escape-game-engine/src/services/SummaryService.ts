@@ -58,6 +58,16 @@ export class SummaryService {
     return GameClockService.getUsedSeconds(game, state);
   }
 
+  static getOvertimeSeconds(game: EscapeGame, state: GameState) {
+    const used = GameClockService.getUsedSeconds(game, state);
+    const limit = game.durationMinutes * 60;
+    return Math.max(used - limit, 0);
+  }
+
+  static getOvertimeMinutes(game: EscapeGame, state: GameState) {
+    return Math.ceil(this.getOvertimeSeconds(game, state) / 60);
+  }  
+
   static isGameCompleted(game: EscapeGame, state: GameState) {
 
     const questions = this.getTotalQuestions(game);
@@ -67,17 +77,15 @@ export class SummaryService {
 
   static getScore(game: EscapeGame, state: GameState) {
 
-    const usedMinutes = Math.floor(
-      this.getUsedSeconds(game, state) / 60
-    );
     const hints = this.getHintsUsed(state);
     const solutions = this.getSolutionsViewed(state);
     const totalQuestions = this.getTotalQuestions(game);
     const correctAnswers = this.getCorrectAnswers(state);
     const completionRatio = correctAnswers / totalQuestions;
+    const overtimeMinutes = this.getOvertimeMinutes(game, state);
 
     const score = this.BASE_SCORE * completionRatio
-      - usedMinutes * this.MINUTE_COST
+      - overtimeMinutes * this.MINUTE_COST
       - hints * this.HINT_COST
       - solutions * this.SOLUTION_COST;
 

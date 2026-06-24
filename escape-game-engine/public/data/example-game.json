@@ -2,7 +2,7 @@
   "version": "1.0",
   "title": "Escape Game Demo",
   "description": "Joc de prova",
-  "durationMinutes": 60,
+  "durationMinutes": 15,
   "defaultPenaltySeconds": 45,
   "pages": [
     {

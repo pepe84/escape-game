@@ -1,6 +1,6 @@
 METADATA,,,,,,,,,,
 title,description,version,durationMinutes,defaultPenaltySeconds,,,,,,
-Escape Game Demo,Joc de prova,1.0,60,45,,,,,,
+Escape Game Demo,Joc de prova,1.0,15,45,,,,,,
 ,,,,,,,,,,
 PAGES,,,,,,,,,,
 title,content,question,formatHelp,penaltySeconds,length,options,hint 1,hint 2,hint 3,answer
