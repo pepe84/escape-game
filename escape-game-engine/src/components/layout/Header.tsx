@@ -43,7 +43,7 @@ export function Header() {
           {state && (
             <button
               onClick={abandonGame}
-              className="bg-red-700 hover:bg-red-600 text-white text-sm px-3 py-1 rounded"
+              className="bg-red-700 hover:bg-red-600 text-white text-sm px-3 py-1 rounded cursor-pointer"
             >
               {t("layout.finishBtn")}
             </button>

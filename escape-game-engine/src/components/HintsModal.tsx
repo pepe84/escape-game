@@ -61,7 +61,7 @@ export function HintsModal({
                   key={index}
                   disabled={!unlocked}
                   onClick={() => setTab(index)}
-                  className={`px-3 py-1 rounded text-sm ${
+                  className={`px-3 py-1 rounded text-sm cursor-pointer ${
                     unlocked
                       ? tab === index
                         ? "bg-blue-500 text-white"
@@ -76,7 +76,7 @@ export function HintsModal({
             <button
               disabled={!solutionUnlocked}
               onClick={() => setTab(hints.length)}
-              className={`px-3 py-1 rounded text-sm ${
+              className={`px-3 py-1 rounded text-sm cursor-pointer ${
                 tab === hints.length
                   ? "bg-green-600 text-white"
                   : solutionUnlocked
@@ -89,7 +89,7 @@ export function HintsModal({
           </div>
           <button
             onClick={onClose}
-            className="px-2"
+            className="px-2 cursor-pointer"
           >
             ✕
           </button>
@@ -115,7 +115,7 @@ export function HintsModal({
           {!solutionUnlocked && (
             <button
               onClick={unlockNext}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer"
             >
               {allHintsUnlocked
                 ? t("gamePage.hints.solutionBtn")

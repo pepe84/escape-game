@@ -6,13 +6,13 @@
   "homePage": {
     "section1": {
       "title": "Demo",
-      "body": "Prova un 'escape game' de demostració per veure la dinàmica de navegació, la gestió d'encerts, errors i pistes i el resum final amb estadístiques.",
+      "body": "Prova un 'escape game' de demostració per veure la dinàmica de navegació, la gestió d'encerts, errors i pistes i el resum final amb estadístiques. La demo està disponible en format <csvLink>CSV</csvLink> o <jsonLink>JSON</jsonLink>.",
       "btn": "Carregar demo"
     },
     "section2": {
       "title": "Joc propi",
-      "body": "Descarrega la demo en format <csvLink>CSV</csvLink> o <jsonLink>JSON</jsonLink> i crea el teu propi 'escape game', seguint l'estructura dels fitxers. Després, importa el fitxer, comprova que funciona i comparteix-ho amb qui vulguis.",
-      "btn": "Importar dades"
+      "body": "Crea el teu propi 'escape game', a partir del fitxer de la demo (<csvLink>CSV</csvLink> o <jsonLink>JSON</jsonLink>). Importa el fitxer i comprova que funciona correctament. Un cop fet, qualsevol podrà jugar amb el teu fitxer des d'aquesta aplicació web.",
+      "btn": "Importar joc"
     },
     "loadingError": "Error desconegut carregant el joc"
   },

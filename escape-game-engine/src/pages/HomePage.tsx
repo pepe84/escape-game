@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import { GameLoaderService } from "../services/GameLoaderService";
-import exampleGame from "../../public/data/example-game.json";
 import { useTranslation, Trans } from "react-i18next";
 
 export function HomePage() {
@@ -34,8 +33,8 @@ export function HomePage() {
     }
   }
 
-  const loadExample = () => {
-    const result = GameLoaderService.validate(exampleGame);
+  const loadExample = async () => {
+    const result = await GameLoaderService.loadFromUrl("/data/example-game.json");
     handleGame(result);
   };
 
@@ -55,10 +54,16 @@ export function HomePage() {
           <h2 className="text-2xl font-bold">
             {t("homePage.section1.title")}
           </h2>
-          <div className="text-gray-500 mt-4 h-50">
-            {t("homePage.section1.body")}
+          <div className="text-gray-500 mt-4 md:pb-14">
+            <Trans
+              i18nKey="homePage.section1.body"
+              components={{
+                csvLink: (<a href="/data/example-game.csv" download className="text-emerald-500" />),
+                jsonLink: (<a href="/data/example-game.json" download className="text-emerald-500" />),
+              }}
+            />            
           </div>
-          <button onClick={loadExample} className="w-full bg-emerald-500 text-white py-3 rounded-xl">
+          <button onClick={loadExample} className="w-full bg-emerald-500 text-white py-3 rounded-xl cursor-pointer">
             {t("homePage.section1.btn")}
           </button>
         </div>
@@ -67,25 +72,28 @@ export function HomePage() {
           <h2 className="text-2xl font-bold">
             {t("homePage.section2.title")}
           </h2>
-          <div className="text-gray-500 mt-4 h-44">
+          <div className="text-gray-500 mt-4">
             <Trans
               i18nKey="homePage.section2.body"
               components={{
-                csvLink: (<a href="/data/example-game.csv" download />),
-                jsonLink: (<a href="/data/example-game.json" download />),
+                csvLink: (<a href="/data/example-game.csv" download className="text-emerald-500" />),
+                jsonLink: (<a href="/data/example-game.json" download className="text-emerald-500" />),
               }}
             />
           </div>
           <div>
-            <input type="file" accept=".json,.csv" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
-            <button onClick={loadFile} className="w-full bg-blue-500 text-white py-3 rounded-xl">
+            <input type="file" accept=".json,.csv" onChange={(e) => setFile(e.target.files?.[0] ?? null)} 
+              className="text-sm text-stone-500 my-4
+              file:mr-5 file:py-1 file:px-3 file:text-xs file:font-medium
+              file:bg-gray-200 file:text-stone-700 file:rounded-lg
+              hover:file:cursor-pointer hover:file:bg-blue-500 hover:file:text-blue-50"/>
+            <button onClick={loadFile} className={`w-full text-white py-3 rounded-xl ${file ? "bg-blue-500 cursor-pointer": "bg-blue-200 "}`} >
               {t("homePage.section2.btn")}
             </button>
-            {error && <pre className="text-red-500 whitespace-pre-wrap">{error}</pre>}
           </div>
         </div>
-
       </div>
+      {error && <pre className="text-red-500 whitespace-pre-wrap">{error}</pre>}
     </>
   );
 }

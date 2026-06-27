@@ -1,5 +1,4 @@
 import type { QuestionProps } from "../../models/QuestionProps";
-import { QuestionType } from "../../models/QuestionType";
 import { TextQuestion } from "./TextQuestion";
 import { SelectQuestion } from "./SelectQuestion";
 import { CodeQuestion } from "./CodeQuestion";
@@ -11,45 +10,20 @@ export function QuestionRenderer({
   onChange
 }: QuestionProps) {
 
-  switch (question.type) {
+  const renderers = {
+    text: TextQuestion,
+    select: SelectQuestion,
+    code: CodeQuestion,
+    date: DateQuestion
+  } as const;
 
-    case QuestionType.TEXT:
-      return (
-        <TextQuestion
-          question={question}
-          answer={answer}
-          onChange={onChange}
-        />
-      );
+  const Component = renderers[question.type];
 
-    case QuestionType.SELECT:
-      return (
-        <SelectQuestion
-          question={question}
-          answer={answer}
-          onChange={onChange}
-        />
-      );
-
-    case QuestionType.CODE:
-      return (
-        <CodeQuestion
-          question={question}
-          answer={answer}
-          onChange={onChange}
-        />
-      );
-
-    case QuestionType.DATE:
-      return (
-        <DateQuestion
-          question={question}
-          answer={answer}
-          onChange={onChange}
-        />
-      );
-
-    default:
-      return null;
-  }
+  return Component ? (
+    <Component
+      question={question}
+      answer={answer}
+      onChange={onChange}
+    />
+  ) : null;
 }

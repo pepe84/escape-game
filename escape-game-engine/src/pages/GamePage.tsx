@@ -167,7 +167,7 @@ export function GamePage() {
               <button
                 type="button"
                 onClick={() => setShowHints(true)}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4 cursor-pointer"
               >
                 <Lightbulb className="inline mr-2"/>  {t("gamePage.hintsBtn")}
               </button>
@@ -175,7 +175,7 @@ export function GamePage() {
 
               <button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg cursor-pointer"
               >
                 <CircleCheckBig className="inline mr-2"/>  {t("gamePage.submitBtn")}
               </button>
@@ -200,7 +200,7 @@ export function GamePage() {
           <div className="flex justify-end">
             <button
               onClick={() => nextPage(state)}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg cursor-pointer"
             >
               {t("gamePage.nextBtn")}
             </button>

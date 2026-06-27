@@ -1,7 +1,16 @@
 import { z } from "zod";
 
+const QuestionTypeSchema = z.enum([
+  "text",
+  "select",
+  "code",
+  "date"
+]);
+
+export type QuestionType = z.infer<typeof QuestionTypeSchema>;
+
 const QuestionSchema = z.object({
-  type: z.enum(["text", "select", "code", "date"]),
+  type: QuestionTypeSchema,
   answer: z.string(),
   hints: z.array(z.string()).optional(),
   penaltySeconds: z.number().optional(),

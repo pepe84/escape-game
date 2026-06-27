@@ -1,4 +1,4 @@
-import type { QuestionType } from "./QuestionType";
+import type { QuestionType } from "./GameSchema";
 
 export interface TextOrCodeQuestionConfig {
   length?: number;

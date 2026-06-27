@@ -43,7 +43,7 @@ export function StartGamePage() {
         <button
           type="submit"
           disabled={!teamName.trim()}
-          className="mt-4 w-full bg-emerald-500 text-white rounded-lg py-3 disabled:opacity-50"
+          className="mt-4 w-full bg-emerald-500 text-white rounded-lg py-3 disabled:opacity-50 cursor-pointer"
         >
           {t("startPage.btn")}
         </button>
