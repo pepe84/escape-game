@@ -6,8 +6,10 @@ export class GameClockService {
   static getElapsedSeconds(state: GameState): number {
     if (!state?.startedAt) return 0;
     const start = new Date(state.startedAt).getTime();
-    const now = Date.now();
-    return Math.max(0, Math.floor((now - start) / 1000));
+    const end = state.finished && state.finishedAt
+      ? new Date(state.finishedAt).getTime()
+      : Date.now();
+    return Math.max(0, Math.floor((end - start) / 1000));
   }
 
   static getPenaltySeconds(state: GameState): number {
